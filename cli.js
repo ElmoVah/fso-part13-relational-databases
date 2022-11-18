@@ -1,3 +1,7 @@
+/**
+ * Simple version of the backend, that was created for the first exercises.
+ */
+
 require('dotenv').config()
 const { Sequelize, Model, DataTypes } = require('sequelize')
 const express = require('express')
@@ -43,7 +47,6 @@ Blog.init({
 })
 
 Blog.sync()
-
 
 app.get('/api/blogs', async (req, res) => {
   const blogs = await Blog.findAll()

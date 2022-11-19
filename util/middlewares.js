@@ -6,7 +6,7 @@ const errorHandler = (error, req, res, next) => {
   }
 
   if (error.name == "SequelizeValidationError") {
-    return res.status(400).send({ error: "missing or malformatted data" });
+    return res.status(400).send({ error: error.errors.message });
   }
 
   if (error.name == "TypeError") {

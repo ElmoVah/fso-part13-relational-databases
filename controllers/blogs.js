@@ -1,15 +1,21 @@
 const router = require('express').Router()
+const { tokenExtractor } = require('../util/middlewares')
 
-const { Blog } = require('../models')
+const { Blog, User } = require('../models')
 
 router.get('/', async (req, res) => {
   const blogs = await Blog.findAll()
   res.json(blogs)
 })
 
-router.post('/', async (req, res) => {
-  const blog = await Blog.create(req.body)
-  return res.json(blog)
+router.post('/', tokenExtractor, async (req, res) => {
+  try {
+    const user = await User.findByPk(req.decodedToken.id)
+    const blog = Blog.create({ ...req.body, userId: user.id, likes: 0, date: new Date() })
+    res.json(blog)
+  } catch (error) {
+    next(error)
+  }
 })
 
 //Middleware for single blogs
@@ -19,20 +25,27 @@ const blogFinder = async (req, res, next) => {
 }
 
 router.delete('/:id', blogFinder, async (req, res) => {
-  if (req.blog) {
-    await req.blog.destroy()
+  try {
+    if (req.blog) {
+      await req.blog.destroy()
+    }
+    res.status(204).end()
+  } catch (error) {
+    next(error)
   }
-  res.status(204).end()
 })
 
 //For updating likes
 router.put('/:id', blogFinder, async (req, res) => {
-  req.blog.likes = req.body.likes
-  await req.blog.save()
-  res.json({
-    likes: req.blog.likes
-  })
-
+  try {
+    req.blog.likes = req.body.likes
+    await req.blog.save()
+    res.json({
+      likes: req.blog.likes
+    })
+  } catch (error) {
+    next(error)
+  }
 })
 
 module.exports = router

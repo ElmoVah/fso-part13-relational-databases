@@ -26,10 +26,12 @@ Blog.init({
     default: 0
   },
   createdAt: {
-    type: DataTypes.DATE
+    type: DataTypes.DATE,
+    field: "created_at"
   },
   updatedAt: {
-    type: DataTypes.DATE
+    type: DataTypes.DATE,
+    field: "updated_at"
   }
 }, {
   sequelize,

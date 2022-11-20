@@ -40,7 +40,15 @@ router.get('/', async (req, res) => {
 router.post('/', tokenExtractor, async (req, res) => {
   try {
     const user = await User.findByPk(req.decodedToken.id)
-    const blog = Blog.create({ ...req.body, userId: user.id, likes: 0, date: new Date() })
+    const blog = Blog.create(
+      {
+        ...req.body,
+        userId: user.id,
+        likes: 0,
+        date: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date()
+      })
     res.json(blog)
   } catch (error) {
     next(error)
@@ -69,9 +77,10 @@ router.delete('/:id', tokenExtractor, blogFinder, async (req, res) => {
 router.put('/:id', blogFinder, async (req, res) => {
   try {
     req.blog.likes = req.body.likes
+    req.blog.updatedAt = new Date()
     await req.blog.save()
     res.json({
-      likes: req.blog.likes
+      likes: req.blog.likes,
     })
   } catch (error) {
     next(error)

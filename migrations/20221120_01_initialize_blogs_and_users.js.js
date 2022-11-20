@@ -21,10 +21,12 @@ module.exports = {
         allowNull: false
       },
       createdAt: {
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
+        field: "created_at"
       },
       updatedAt: {
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
+        field: "updated_at"
       }
     })
 
@@ -50,10 +52,12 @@ module.exports = {
         default: 0
       },
       createdAt: {
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
+        field: "created_at"
       },
       updatedAt: {
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
+        field: "updated_at"
       }
     })
 

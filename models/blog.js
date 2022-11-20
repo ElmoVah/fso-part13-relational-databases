@@ -25,6 +25,20 @@ Blog.init({
     type: DataTypes.INTEGER,
     default: 0
   },
+  year: {
+    type: DataTypes.INTEGER,
+    default: false,
+    validate: {
+      min: {
+        args: 1991,
+        msg: "Year needs to be atleast 1991.",
+      },
+      max: {
+        args: new Date().getFullYear(),
+        msg: "Year cant be greater than current year.",
+      }
+    }
+  },
   createdAt: {
     type: DataTypes.DATE,
     field: "created_at"

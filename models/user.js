@@ -2,7 +2,7 @@ const { Model, DataTypes } = require('sequelize')
 
 const { sequelize } = require('../util/db')
 
-class User extends Model {}
+class User extends Model { }
 
 User.init({
   id: {
@@ -21,6 +21,12 @@ User.init({
   name: {
     type: DataTypes.STRING,
     allowNull: false
+  },
+  createdAt: {
+    type: DataTypes.DATE
+  },
+  updatedAt: {
+    type: DataTypes.DATE
   },
 }, {
   sequelize,

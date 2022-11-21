@@ -8,13 +8,13 @@ module.exports = {
         primaryKey: true,
         autoIncrement: true
       },
-      userId: {
-        type: DataTypes.STRING,
+      user_id: {
+        type: DataTypes.INTEGER,
         allowNull: false,
         reference: { model: 'users', key: 'id' }
       },
-      blogId: {
-        type: DataTypes.STRING,
+      blog_id: {
+        type: DataTypes.INTEGER,
         allowNull: false,
         reference: { model: 'blogs', key: 'id' }
       },
@@ -25,6 +25,6 @@ module.exports = {
     })
   },
   down: async ({ context: queryInterface }) => {
-    await queryInterface.dropTable('reading')
+    await queryInterface.dropTable('readinglist')
   }
 }

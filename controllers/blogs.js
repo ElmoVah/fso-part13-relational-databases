@@ -40,6 +40,13 @@ router.get('/', async (req, res) => {
 router.post('/', tokenExtractor, async (req, res) => {
   try {
     const user = await User.findByPk(req.decodedToken.id)
+
+    if (!user) {
+      res.status(401).json({
+        errorMessage: 'Missing or Invalid Token.'
+      })
+    }
+
     const blog = Blog.create(
       {
         ...req.body,
@@ -50,6 +57,7 @@ router.post('/', tokenExtractor, async (req, res) => {
         updatedAt: new Date()
       })
     res.json(blog)
+
   } catch (error) {
     next(error)
   }

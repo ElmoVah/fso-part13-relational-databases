@@ -20,7 +20,7 @@ router.put('/:id', tokenExtractor, async (req, res, next) => {
   try {
     const user = await User.findByPk(req.decodedToken.id)
 
-    if (!user) {
+    if (!user || user.disabled) {
       res.status(401).json({
         errorMessage: 'Missing or Invalid Token.'
       })

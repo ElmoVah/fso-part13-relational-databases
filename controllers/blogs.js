@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const { tokenExtractor } = require('../util/middlewares')
+const { tokenExtractor, sessionExtractor } = require('../util/middlewares')
 const { Op } = require('sequelize')
 
 const { Blog, User } = require('../models')
@@ -37,14 +37,18 @@ router.get('/', async (req, res) => {
   res.json(blogs)
 })
 
-router.post('/', tokenExtractor, async (req, res) => {
+router.post('/', tokenExtractor, sessionExtractor, async (req, res) => {
   try {
     const user = await User.findByPk(req.decodedToken.id)
 
-    if (!user) {
+    if (!user || user.disabled) {
       res.status(401).json({
         errorMessage: 'Missing or Invalid Token.'
       })
+    }
+
+    if (user.disabled) {
+      return res.status(403).send({ error: "Session expired, please log in again."})
     }
 
     const blog = Blog.create(
@@ -72,9 +76,17 @@ const blogFinder = async (req, res, next) => {
 router.delete('/:id', tokenExtractor, blogFinder, async (req, res) => {
   try {
     const user = await User.findByPk(req.decodedToken.id)
+
+    if (!user || user.disabled) {
+      res.status(401).json({
+        errorMessage: 'Missing or Invalid Token.'
+      })
+    }
+
     if (req.blog.userId === user.id) {
       await req.blog.destroy()
     }
+
     res.status(204).end()
   } catch (error) {
     next(error)
